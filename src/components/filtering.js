@@ -1,7 +1,14 @@
 import {createComparison, defaultRules} from "../lib/compare.js";
 
 // @todo: #4.3 — настроить компаратор
-const compare = createComparison(defaultRules);
+const compare = createComparison(
+    [rules.skipEmptyTargetValues()],           // Пропускать пустые поля state
+    [
+        rules.caseInsensitiveStringIncludes(), // date, customer, seller (строки)
+        rules.arrayAsRange(),                  // totalFrom/totalTo как диапазон [от, до]
+        rules.searchMultipleFields('search', ['date', 'customer', 'seller'], false) // для поиска
+    ]
+);
 
 export function initFiltering(elements, indexes) {
     // @todo: #4.1 — заполнить выпадающие списки опциями
@@ -22,7 +29,7 @@ export function initFiltering(elements, indexes) {
         // @todo: #4.2 — обработать очистку поля
         if (action && action.name === 'clear') {
             const button = action;
-            const fieldName = button.state.field;
+            const fieldName = button.dataset.field;
             const parent = button.parentElement;
             const input = parent.querySelector('input, select');
 
