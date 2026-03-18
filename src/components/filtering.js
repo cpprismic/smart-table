@@ -1,14 +1,16 @@
 import {createComparison, defaultRules} from "../lib/compare.js";
 
 // @todo: #4.3 — настроить компаратор
-const compare = createComparison(
-    [rules.skipEmptyTargetValues()],           // Пропускать пустые поля state
-    [
-        rules.caseInsensitiveStringIncludes(), // date, customer, seller (строки)
-        rules.arrayAsRange(),                  // totalFrom/totalTo как диапазон [от, до]
-        rules.searchMultipleFields('search', ['date', 'customer', 'seller'], false) // для поиска
-    ]
-);
+// const compare = createComparison(
+//     [rules.skipEmptyTargetValues()],           // Пропускать пустые поля state
+//     [
+//         rules.caseInsensitiveStringIncludes(), // date, customer, seller (строки)
+//         rules.arrayAsRange(),                  // totalFrom/totalTo как диапазон [от, до]
+//         rules.searchMultipleFields('search', ['date', 'customer', 'seller'], false) // для поиска
+//     ]
+// );
+
+const compare = createComparison(defaultRules);
 
 export function initFiltering(elements, indexes) {
     // @todo: #4.1 — заполнить выпадающие списки опциями
