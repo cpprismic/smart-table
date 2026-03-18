@@ -25,15 +25,10 @@ function collectState() {
     const rowsPerPage = parseInt(state.rowsPerPage);    // приведём количество страниц к числу
     const page = parseInt(state.page ?? 1);                // номер страницы по умолчанию 1 и тоже число
 
-    const totalFrom = state.totalFrom ? parseFloat(state.totalFrom) : '';
-    const totalTo = state.totalTo ? parseFloat(state.totalTo) : '';
-
     return {
         ...state,
         rowsPerPage,
         page,
-        totalFrom,
-        totalTo
     };
 
 }
@@ -83,7 +78,7 @@ const applyFiltering = initFiltering(sampleTable.filter.elements, {    // пер
     searchBySeller: indexes.sellers                                    // для элемента с именем searchBySeller устанавливаем массив продавцов
 });
 
-const applySearching = initSearching('search');
+const applySearching = initSearching(sampleTable.search.elements,'search');
 
 const appRoot = document.querySelector('#app');
 appRoot.appendChild(sampleTable.container);
