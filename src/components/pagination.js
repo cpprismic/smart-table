@@ -9,13 +9,13 @@ export const initPagination = ({pages, fromRow, toRow, totalRows}, createPage) =
         const pageCount = Math.ceil(data.length / rowsPerPage);        // число страниц округляем в большую сторону
         let page = state.page;                                        // страница переменной, потому что она может меняться при обработке действий позже
 
-        const skip = (page - 1) * rowsPerPage;
         if (action) switch(action.name) {
             case 'prev': page = Math.max(1, page - 1); break;            // переход на предыдущую страницу
             case 'next': page = Math.min(pageCount, page + 1); break;    // переход на следующую страницу
             case 'first': page = 1; break;                                // переход на первую страницу
             case 'last': page = pageCount; break;                        // переход на последнюю страницу
         }
+        const skip = (page - 1) * rowsPerPage;
 
         const visiblePages = getPages(page, pageCount, 5);                // Получим массив страниц, которые нужно показать, выводим только 5 страниц
         pages.replaceChildren(...visiblePages.map(pageNumber => {        // перебираем их и создаём для них кнопку

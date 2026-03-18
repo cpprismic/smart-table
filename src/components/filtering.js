@@ -29,6 +29,15 @@ export function initFiltering(elements, indexes) {
             }
         }
 
-        return data.filter(row => compare(row, state));
+        const compareState = {...state};
+        const from = state.totalFrom || undefined;
+        const to   = state.totalTo   || undefined;
+        if (from !== undefined || to !== undefined) {
+            compareState.total = [from, to];
+        }
+        delete compareState.totalFrom;
+        delete compareState.totalTo;
+
+        return data.filter(row => compare(row, compareState));
     }
 }
