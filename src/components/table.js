@@ -27,6 +27,11 @@ export function initTable(settings, onAction) {
         onAction(e.submitter);
     })
 
+    /**
+     * Перерисовывает строки таблицы на основе переданного массива данных
+     *
+     * @param {Array} data - Массив объектов строк для отображения в таблице
+     */
     const render = (data) => {
         const nextRows = data.map(item => {
             const row = cloneTemplate(rowTemplate);

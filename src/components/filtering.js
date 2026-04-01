@@ -1,4 +1,16 @@
+/**
+ * Инициализирует компонент фильтрации таблицы
+ *
+ * @param {Object} elements - Объект с именованными DOM-элементами полей фильтра
+ * @returns {{updateIndexes: Function, applyFiltering: Function}} - Функции для обновления справочников и применения фильтров
+ */
 export function initFiltering(elements) {
+    /**
+     * Заполняет выпадающие списки значениями из справочников
+     *
+     * @param {Object} elements - Объект с именованными DOM-элементами (select и input)
+     * @param {Object} indexes - Объект, где ключи — имена элементов, значения — объекты-справочники
+     */
     const updateIndexes = (elements, indexes) => {
         Object.keys(indexes).forEach((elementName) => {
             elements[elementName].append(...Object.values(indexes[elementName]).map(name => {
@@ -10,6 +22,17 @@ export function initFiltering(elements) {
         })
     };
 
+    /**
+     * Добавляет параметры фильтрации к объекту запроса
+     *
+     * Подробнее: Обрабатывает нажатие кнопки сброса отдельного фильтра и собирает
+     * непустые значения всех полей фильтра в объект query.
+     *
+     * @param {Object} query - Текущий объект параметров запроса
+     * @param {Object} state - Текущее состояние формы
+     * @param {HTMLElement} action - Элемент, вызвавший обновление (например, кнопка сброса)
+     * @returns {Object} - Обновлённый объект запроса с параметрами фильтрации
+     */
     const applyFiltering = (query, state, action) => {
         if (action && action.type === 'click' && action.target.name === 'clear') {
             const button = action.target;
@@ -24,7 +47,6 @@ export function initFiltering(elements) {
             }
         }
 
-        // @todo: #4.5 — отфильтровать данные, используя компаратор
         const filter = {};
         Object.keys(elements).forEach(key => {
             if (elements[key]) {
