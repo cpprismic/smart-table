@@ -11,6 +11,7 @@ export function initData() {
     let customers;
     let lastResult;
     let lastQuery;
+    let ready = false;  // флаг готовности: true после загрузки индексов
 
     /**
      * Преобразует массив записей о продажах в формат, используемый таблицей
@@ -42,6 +43,7 @@ export function initData() {
             ]);
         }
 
+        ready = true;
         return { sellers, customers };
     }
 
@@ -57,6 +59,7 @@ export function initData() {
      */
     // функция получения записей о продажах с сервера
     const getRecords = async (query, isUpdated = false) => {
+        if (!ready) return { total: 0, items: [] };  // индексы ещё не загружены
         const qs = new URLSearchParams(query);          // преобразуем объект параметров в SearchParams объект, представляющий query часть url
         const nextQuery = qs.toString();                // и приводим к строковому виду
 

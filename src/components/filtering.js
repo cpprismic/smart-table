@@ -34,15 +34,20 @@ export function initFiltering(elements) {
      * @returns {Object} - Обновлённый объект запроса с параметрами фильтрации
      */
     const applyFiltering = (query, state, action) => {
-        if (action && action.type === 'click' && action.target.name === 'clear') {
-            const button = action.target;
+        if (action && action.name === 'clear') {
+            const button = action;
             const fieldName = button.dataset.field;
             const filterWrapper = button.closest('.filter-wrapper');
             if (filterWrapper) {
                 const input = filterWrapper.querySelector('input');
                 if (input) {
-                    input.value = '';       // сбрасываем значение поля
-                    state[fieldName] = '';  // сбрасываем значение в состоянии
+                    input.value = '';           // сбрасываем значение поля
+                    state[fieldName] = '';      // сбрасываем значение в состоянии
+                }
+                const select = filterWrapper.querySelector('select');
+                if (select) {
+                    select.value = '';          // сбрасываем select-фильтр
+                    state[select.name] = '';    // сбрасываем значение в состоянии
                 }
             }
         }

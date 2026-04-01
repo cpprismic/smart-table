@@ -19,8 +19,8 @@ const API = initData();
  */
 function collectState() {
     const state = processFormData(new FormData(sampleTable.container));
-    const rowsPerPage = parseInt(state.rowsPerPage);    // приведём количество страниц к числу
-    const page = parseInt(state.page ?? 1);             // номер страницы по умолчанию 1 и тоже число
+    const rowsPerPage = parseInt(state.rowsPerPage) || 10;  // приведём количество страниц к числу, по умолчанию 10
+    const page = parseInt(state.page ?? 1);                 // номер страницы по умолчанию 1 и тоже число
 
     return {
         ...state,
