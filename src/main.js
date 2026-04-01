@@ -14,7 +14,8 @@ import {initFiltering} from "./components/filtering.js"
 import {initSearching} from "./components/searching.js"
 
 // Исходные данные используемые в render()
-const {data, ...indexes} = initData(sourceData);
+// const {data, ...indexes} = initData(sourceData);
+const API = initData(sourceData);
 
 /**
  * Сбор и обработка полей из таблицы
@@ -37,15 +38,24 @@ function collectState() {
  * Перерисовка состояния таблицы при любых изменениях
  * @param {HTMLButtonElement?} action
  */
-function render(action) {
+async function render(action) {
     let state = collectState(); // состояние полей из таблицы
-    let result = [...data]; // копируем для последующего изменения
-    result = applySearching(result, state, action);
-    result = applyFiltering(result, state, action);
-    result = applySorting(result, state, action);
-    result = applyPagination(result, state, action);
+    // let result = [...data]; // копируем для последующего изменения
+    let query = {};
 
-    sampleTable.render(result)
+    // result = applySearching(result, state, action);
+    // result = applyFiltering(result, state, action);
+    // result = applySorting(result, state, action);
+    // result = applyPagination(result, state, action);
+    query = applySearching(query, state, action);
+    query = applyFiltering(query, state, action);
+    query = applySorting(query, state, action);
+    query = applyPagination(query, state, action);
+
+    const {total, items} = await API.getRecords(query);
+    
+    updatePagination(total, query); // перерисовываем пагинатор
+    sampleTable.render(items);
 }
 
 const sampleTable = initTable({
@@ -55,9 +65,7 @@ const sampleTable = initTable({
     after: ['pagination']
 }, render);
 
-// @todo: инициализация
-
-const applyPagination = initPagination(
+const {applyPagination, updatePagination} = initPagination(
     sampleTable.pagination.elements,             // передаём сюда элементы пагинации, найденные в шаблоне
     (el, page, isCurrent) => {                    // и колбэк, чтобы заполнять кнопки страниц данными
         const input = el.querySelector('input');
@@ -74,13 +82,21 @@ const applySorting = initSorting([        // Нам нужно передать 
     sampleTable.header.elements.sortByTotal
 ]);
 
-const applyFiltering = initFiltering(sampleTable.filter.elements, {    // передаём элементы фильтра
-    searchBySeller: indexes.sellers                                    // для элемента с именем searchBySeller устанавливаем массив продавцов
-});
+const {applyFiltering, updateIndexes} = initFiltering(sampleTable.filter.elements);
 
 const applySearching = initSearching('search');
 
 const appRoot = document.querySelector('#app');
 appRoot.appendChild(sampleTable.container);
 
-render();
+async function init() {
+    const indexes = await API.getIndexes();
+
+    updateIndexes(sampleTable.filter.elements, {
+        searchBySeller: indexes.sellers
+    });
+}
+
+init().then(render);
+
+// render();
